@@ -1,0 +1,23 @@
+body{
+    background-color: lightgray;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+#canvas{
+    background-color: white;
+    margin: 10px;
+}
+
+#score{
+    margin: 70px 30px;
+}
+
+#title h1{
+    text-align: center;
+}
+
+canvas {
+    border: 1px solid gray;
+  }
