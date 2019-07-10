@@ -215,6 +215,7 @@ class Game {
             this.player.positionY + this.player.height > this.chaser.positionY){
                 console.log("NOOOOOOO! the green monster got you!!");
                 this.stop();
+                alert("GAME OVER! (loser!) refresh your page to play again");
             }
     }
 
