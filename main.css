@@ -18,6 +18,30 @@ body{
     text-align: center;
 }
 
+.startscreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: lightblue;
+    position: absolute;
+    margin: 11px;
+    width: 500px;
+    height: 400px;
+}
+
+.startscreen h2 {
+    text-align: center;
+}
+
+#startbutton {
+    align-self: center;
+    width: 100px;
+}
+
+.display-none{
+    display: none;
+}
+
 canvas {
     border: 1px solid gray;
   }

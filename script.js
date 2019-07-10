@@ -19,14 +19,18 @@ class Coin {
 /////////////////////////////////////////////////////////////////
 // Obstacle 
 class Obstacle {
-    constructor(positionX, positionY, width, height, img, callback) {
+    constructor(positionX, positionY, width, height, src, callback, img=undefined) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.width = width;
         this.height = height;
+        if(img === undefined) {
         this.img = new Image();
         this.img.onload = callback;
-        this.img.src = img;
+        this.img.src = src;
+        }else{
+            this.img = img;
+        }
     }
 }
 
@@ -65,13 +69,33 @@ class Player {
     }
 }
 ////////////////////////////////////////////////////////////////////
-// game 
+// game onload
+
 window.onload = function() {
-    let game = new Game();   
+
     
-    window.addEventListener("keydown", game.keyDown.bind(game));
-    window.addEventListener("keyup", game.keyUp.bind(game));
+    document.getElementById("startbutton").onclick = function() {
+         startGame();
+        }
+
+    function startGame(){
+        console.log(document)
+        document.getElementsByClassName("startscreen")[0].classList.toggle("display-none");
+        document.getElementById("start-title").classList.toggle("display-none");
+        document.getElementById("startbutton").classList.toggle("display-none");
+        var game = new Game(); 
+        window.addEventListener("keydown", game.keyDown.bind(game)); 
+        window.addEventListener("keyup", game.keyUp.bind(game));
+    }
+      
+
+    
 }
+
+
+
+/////////////////////////////////////////////////////////////////////
+// Game
 
 class Game {
     constructor() {
@@ -88,21 +112,7 @@ class Game {
     createObstacle() {
         let i = 0;
         this.obstacle = [
-            new Obstacle (0, 50, 50, 50,    "box.png", this.start.bind(this)),
-            new Obstacle (50, 50, 50, 50,   "box.png", this.start.bind(this)),
-            new Obstacle (200, 300, 50, 50, "box.png", this.start.bind(this)),
-            new Obstacle (200, 350, 50, 50, "box.png", this.start.bind(this)),
-            new Obstacle (250, 350, 50, 50, "box.png", this.start.bind(this)),
-            new Obstacle (50, 350, 50, 50,  "box.png", this.start.bind(this)),
-            new Obstacle (50, 300, 50, 50,  "box.png", this.start.bind(this)),
-            new Obstacle (100, 300, 50, 50, "box.png", this.start.bind(this)),
-            new Obstacle (350, 50, 50, 50,  "box.png", this.start.bind(this)),
-            new Obstacle (350, 100, 50, 50, "box.png", this.start.bind(this)),
-            new Obstacle (400, 50, 50, 50,  "box.png", this.start.bind(this)),
-            new Obstacle (300, 200, 50, 50, "box.png", this.start.bind(this)),
-            new Obstacle (250, 200, 50, 50, "box.png", this.start.bind(this)),
-            new Obstacle (50, 200, 50, 50,  "box.png", this.start.bind(this))
-        ]
+            new Obstacle (0, 50, 50, 50,    "box.png", this.start.bind(this))]
     }
 
     createChaser(){
@@ -115,7 +125,24 @@ class Game {
     }
 
     start() {
+        this.obstacle = this.obstacle.concat([new Obstacle (50, 50, 50, 50,   "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (200, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (200, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (250, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (50, 350, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (50, 300, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (100, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (350, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (350, 100, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (400, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (300, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (250, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        new Obstacle (50, 200, 50, 50,  "box.png", undefined, this.obstacle[0].img)])
         this.intervalId = setInterval(this.updateCanvas.bind(this), 20)
+    }
+
+    stop() {
+        clearInterval(this.intervalId);
     }
   
     draw() {
@@ -126,7 +153,7 @@ class Game {
         for(i = 0; i < this.obstacle.length; i++){
             this.ctx.drawImage(this.obstacle[i].img, this.obstacle[i].positionX, this.obstacle[i].positionY, 50, 50);
         }
-        
+
         this.ctx.drawImage(this.chaser.img, this.chaser.spritePositionX, this.chaser.spritePositionY, 32, 32, this.chaser.positionX, this.chaser.positionY, 32, 32);
 
         
@@ -135,16 +162,17 @@ class Game {
     collisionDetection() {
         this.checkForCollisionCoin();
         this.checkForCollisionObstacle();
+        this.checkForCollisionChaser();
     };
 
     updateCanvas() {
         this.clearCanvas();
         this.savedPosition();
         switch (this.currentKey) {
-            case 38: this.moveUp();    console.log('up'); break;
-            case 40: this.moveDown();  console.log('down'); break;
-            case 37: this.moveLeft();  console.log('left'); break;
-            case 39: this.moveRight(); console.log('right'); break;
+            case 38: this.moveUp();    break;
+            case 40: this.moveDown();  break;
+            case 37: this.moveLeft();  break;
+            case 39: this.moveRight(); break;
         }
         this.moveChaser();
         this.collisionDetection();
@@ -180,6 +208,16 @@ class Game {
         }
     }
 
+    checkForCollisionChaser() {
+        if (this.player.positionX < this.chaser.positionX + this.chaser.width &&
+            this.player.positionX + this.player.width > this.chaser.positionX &&
+            this.player.positionY < this.chaser.positionY + this.chaser.height && 
+            this.player.positionY + this.player.height > this.chaser.positionY){
+                console.log("NOOOOOOO! the green monster got you!!");
+                this.stop();
+            }
+    }
+
     moveCoin(){
         this.coin.positionX = Math.floor(Math.random() * (this.canvas.width - this.coin.width)); 
         this.coin.positionY = Math.floor(Math.random() * (this.canvas.height - this.coin.width)); 
@@ -197,7 +235,7 @@ class Game {
         if(this.player.positionY < 0){
         this.player.positionY = 0;
         }else{
-         this.player.positionY -= 1/3;
+         this.player.positionY -= 5;
          this.player.spritePositionX = 0;
          this.player.spritePositionY = 96;
          }
@@ -207,7 +245,7 @@ class Game {
         if(this.player.positionY  + this.player.height >= this.canvas.height) {
             this.player.positionY = this.canvas.height - this.player.height;
         }else{
-        this.player.positionY += 1/3;
+        this.player.positionY += 5;
         this.player.spritePositionX = 0;
         this.player.spritePositionY = 0;
         } 
@@ -217,7 +255,7 @@ class Game {
         if(this.player.positionX< 0){
             this.player.positionX = 0;
         }else{
-         this.player.positionX -= 1/3;
+         this.player.positionX -= 5;
          this.player.spritePositionX = 0;
          this.player.spritePositionY = 32;
         }
@@ -227,7 +265,7 @@ class Game {
         if(this.player.positionX + this.player.width >= this.canvas.width) {
             this.player.positionX = this.canvas.width - this.player.width;
         }else{
-        this.player.positionX += 1/3;
+        this.player.positionX += 5;
         this.player.spritePositionX = 0;
         this.player.spritePositionY = 64;
         }
@@ -235,6 +273,7 @@ class Game {
 
     keyDown(e) {
         this.currentKey = e.keyCode;
+        e.preventDefault();
     };
         
     keyUp(e) {
@@ -246,16 +285,16 @@ class Game {
 
     moveChaser() {
         if(this.player.positionX < this.chaser.positionX){
-            this.chaser.positionX -= 1/10;
+            this.chaser.positionX -= 1;
         }
         if(this.player.positionX > this.chaser.positionX){
-            this.chaser.positionX += 1/10;
+            this.chaser.positionX += 1;
         }
         if(this.player.positionY < this.chaser.positionY){
-            this.chaser.positionY -= 1/10;
+            this.chaser.positionY -= 1;
         }
         if(this.player.positionY > this.chaser.positionY){
-            this.chaser.positionY += 1/10;
+            this.chaser.positionY += 1;
         }
     }
 
