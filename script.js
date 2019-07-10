@@ -32,15 +32,17 @@ class Obstacle {
 
 ///////////////////////////////////////////////////////////////////
 // Green monster
-class chaser {
-    constructor(positionX, positionY, width, height, img, callback) {
+class Chaser {
+    constructor(positionX, positionY, width, height, img, callback, spritePositionX, spritePositionY) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.width = width;
         this.height = height;
         this.img = new Image();
-        //this.img.onload = callback;
+        this.img.onload = callback;
         this.img.src = img;
+        this.spritePositionX = spritePositionX;
+        this.spritePositionY = spritePositionY;
     }
 }
 
@@ -49,7 +51,7 @@ class chaser {
 ////////////////////////////////////////////////////////////////////
 // Constructor functions
 class Player {
-    constructor(name, positionX, positionY , width, height, character, callback) {
+    constructor(name, positionX, positionY , width, height, character, callback, spritePositionX, spritePositionY) {
         this.name = name;
         this.positionX = positionX;
         this.width = width;
@@ -58,6 +60,8 @@ class Player {
         this.character = new Image();
         this.character.onload = callback;
         this.character.src = character;
+        this.spritePositionX = spritePositionX;
+        this.spritePositionY = spritePositionY;
     }
 }
 ////////////////////////////////////////////////////////////////////
@@ -71,16 +75,14 @@ window.onload = function() {
 
 class Game {
     constructor() {
-        this.player = new Player("player1", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this));
+        this.player = new Player("player1", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 0, 0);
         this.canvas = document.getElementById("canvas");
         this.ctx = canvas.getContext("2d");
         this.currentKey = undefined;
-        this.spritePositionX = 0;
-        this.spritePositionY = 0;
     }
 
     createCoin() {
-        this.coin = new Coin (200, 100, 30, 30, "coin_2.png", this.createObstacle.bind(this));
+        this.coin = new Coin (200, 100, 30, 30, "coin_2.png", this.createChaser.bind(this));
     }
 
     createObstacle() {
@@ -103,6 +105,10 @@ class Game {
         ]
     }
 
+    createChaser(){
+        this.chaser = new Chaser(468, 368, 32, 32,"sprites-players.png", this.createObstacle.bind(this), 32, 128);
+    }
+
     savedPosition(){
         this.currentX = this.player.positionX;
         this.currentY = this.player.positionY;
@@ -114,12 +120,15 @@ class Game {
   
     draw() {
         this.ctx.drawImage(this.coin.img, this.coin.positionX, this.coin.positionY, 30, 30);
-        this.ctx.drawImage(this.player.character, this.spritePositionX, this.spritePositionY, 32, 32, this.player.positionX, this.player.positionY, 32, 32);
+        this.ctx.drawImage(this.player.character, this.player.spritePositionX, this.player.spritePositionY, 32, 32, this.player.positionX, this.player.positionY, 32, 32);
 
         let i = 0;
         for(i = 0; i < this.obstacle.length; i++){
             this.ctx.drawImage(this.obstacle[i].img, this.obstacle[i].positionX, this.obstacle[i].positionY, 50, 50);
         }
+        
+        this.ctx.drawImage(this.chaser.img, this.chaser.spritePositionX, this.chaser.spritePositionY, 32, 32, this.chaser.positionX, this.chaser.positionY, 32, 32);
+
         
     }
 
@@ -137,6 +146,7 @@ class Game {
             case 37: this.moveLeft();  console.log('left'); break;
             case 39: this.moveRight(); console.log('right'); break;
         }
+        this.moveChaser();
         this.collisionDetection();
         this.draw();
     }
@@ -188,8 +198,8 @@ class Game {
         this.player.positionY = 0;
         }else{
          this.player.positionY -= 1/3;
-         this.spritePositionX = 0;
-         this.spritePositionY = 96;
+         this.player.spritePositionX = 0;
+         this.player.spritePositionY = 96;
          }
         };
 
@@ -198,8 +208,8 @@ class Game {
             this.player.positionY = this.canvas.height - this.player.height;
         }else{
         this.player.positionY += 1/3;
-        this.spritePositionX = 0;
-        this.spritePositionY = 0;
+        this.player.spritePositionX = 0;
+        this.player.spritePositionY = 0;
         } 
         };
 
@@ -208,8 +218,8 @@ class Game {
             this.player.positionX = 0;
         }else{
          this.player.positionX -= 1/3;
-         this.spritePositionX = 0;
-         this.spritePositionY = 32;
+         this.player.spritePositionX = 0;
+         this.player.spritePositionY = 32;
         }
         };
 
@@ -218,8 +228,8 @@ class Game {
             this.player.positionX = this.canvas.width - this.player.width;
         }else{
         this.player.positionX += 1/3;
-        this.spritePositionX = 0;
-        this.spritePositionY = 64;
+        this.player.spritePositionX = 0;
+        this.player.spritePositionY = 64;
         }
         };
 
@@ -233,6 +243,21 @@ class Game {
         this.currentKey = undefined;
         }
     };
+
+    moveChaser() {
+        if(this.player.positionX < this.chaser.positionX){
+            this.chaser.positionX -= 1/10;
+        }
+        if(this.player.positionX > this.chaser.positionX){
+            this.chaser.positionX += 1/10;
+        }
+        if(this.player.positionY < this.chaser.positionY){
+            this.chaser.positionY -= 1/10;
+        }
+        if(this.player.positionY > this.chaser.positionY){
+            this.chaser.positionY += 1/10;
+        }
+    }
 
 }
 
