@@ -75,16 +75,27 @@ window.onload = function() {
 
     
     document.getElementById("startbutton").onclick = function() {
-         startGame();
-        }
-
-    function startGame(){
-        console.log(document)
         document.getElementsByClassName("startscreen")[0].classList.toggle("display-none");
         var game = new Game(); 
         window.addEventListener("keydown", game.keyDown.bind(game)); 
         window.addEventListener("keyup", game.keyUp.bind(game));
-    }   
+        }
+
+    document.getElementById("restartstartbutton").onclick = function() {
+        document.getElementsByClassName("game-over-screen")[0].classList.toggle("display-none");
+        var game = new Game(); 
+        window.addEventListener("keydown", game.keyDown.bind(game)); 
+        window.addEventListener("keyup", game.keyUp.bind(game));
+        }
+
+    // function startGame(){
+    //     console.log(document)
+    //     document.getElementsByClassName("startscreen")[0].classList.toggle("display-none");
+    //     document.getElementsByClassName("game-over-screen")[0].classList.toggle("display-none");
+    //     var game = new Game(); 
+    //     window.addEventListener("keydown", game.keyDown.bind(game)); 
+    //     window.addEventListener("keyup", game.keyUp.bind(game));
+    // }   
 }
 
 
@@ -138,6 +149,7 @@ class Game {
 
     stop() {
         clearInterval(this.intervalId);
+        document.getElementsByClassName("game-over-screen")[0].classList.toggle("display-none");
     }
   
     draw() {
@@ -210,7 +222,6 @@ class Game {
             this.player.positionY + this.player.height > this.chaser.positionY){
                 console.log("NOOOOOOO! the green monster got you!!");
                 this.stop();
-                alert("GAME OVER! (HAHAH loser!) refresh your page to play again");
             }
     }
 
