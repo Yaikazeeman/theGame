@@ -81,15 +81,10 @@ window.onload = function() {
     function startGame(){
         console.log(document)
         document.getElementsByClassName("startscreen")[0].classList.toggle("display-none");
-        document.getElementById("start-title").classList.toggle("display-none");
-        document.getElementById("startbutton").classList.toggle("display-none");
         var game = new Game(); 
         window.addEventListener("keydown", game.keyDown.bind(game)); 
         window.addEventListener("keyup", game.keyUp.bind(game));
-    }
-      
-
-    
+    }   
 }
 
 
@@ -112,7 +107,7 @@ class Game {
     createObstacle() {
         let i = 0;
         this.obstacle = [
-            new Obstacle (0, 50, 50, 50,    "box.png", this.start.bind(this))]
+            new Obstacle (0, 50, 50, 50, "box.png", this.start.bind(this))]
     }
 
     createChaser(){
@@ -215,7 +210,7 @@ class Game {
             this.player.positionY + this.player.height > this.chaser.positionY){
                 console.log("NOOOOOOO! the green monster got you!!");
                 this.stop();
-                alert("GAME OVER! (loser!) refresh your page to play again");
+                alert("GAME OVER! (HAHAH loser!) refresh your page to play again");
             }
     }
 

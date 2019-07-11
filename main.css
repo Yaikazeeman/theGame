@@ -3,19 +3,47 @@ body{
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
+    background-image: url(background-industrial.jpg);
+    background-size: 60%;
 }
 
 #canvas{
     background-color: white;
     margin: 10px;
+    width: 500px;
+    height: 400px;
+    background-image: url(background-industrial-2.jpg);
+    background-size: 120%;
+    border-radius: 5px;
 }
 
 .score{
+    background-color: gray;
+    background-image: url(background-industrial-\ 4.jpg);
     margin: 70px 30px;
+    width: 200px;
+    height: 200px;
+    border: 4px solid #23495f;
+    border-radius: 5px;
 }
 
-#title h1{
-    text-align: center;
+.score img {
+    margin: 20px 40px;
+    width: 100px;
+}
+
+.score strong p {
+    font-size: 20px;
+    margin:  20px 40px;
+}
+
+#title {
+    display: flex;
+    justify-content: center;
+}
+
+#title img{
+    width: 300px;
 }
 
 .startscreen {
@@ -24,18 +52,33 @@ body{
     justify-content: center;
     background-color: lightblue;
     position: absolute;
-    margin: 11px;
+    margin: 10px;
     width: 500px;
     height: 400px;
+    background-image: url(background-brickwall.jpg);
+    background-size: 150%;
+    border: 4px solid #23495f;
+    border-radius: 5px;
 }
 
-.startscreen h2 {
-    text-align: center;
+.startscreen img {
+    align-self: center;
 }
 
 #startbutton {
     align-self: center;
-    width: 100px;
+    width: 200px;
+    position: relative;
+    border: 0;
+    padding: 15px 25px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px #23495f;
+    transition: top .01s linear;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+    color: white;
+    background-color: #23495f;
 }
 
 .display-none{
