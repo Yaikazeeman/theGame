@@ -17,6 +17,7 @@ class Coin {
     }
 }
 
+
 /////////////////////////////////////////////////////////////////
 // Obstacle 
 class Obstacle {
@@ -120,7 +121,6 @@ class Game {
     }
 
     createObstacle() {
-        let i = 0;
         this.obstacle = [
             new Obstacle (0, 50, 50, 50, "box.png", this.start.bind(this))]
     }
@@ -135,6 +135,8 @@ class Game {
     }
 
     start() {
+        score = 0;
+        document.getElementById("score").innerText = score;
         this.obstacle = this.obstacle.concat([new Obstacle (50, 50, 50, 50,   "box.png", undefined, this.obstacle[0].img),
         new Obstacle (200, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
         new Obstacle (200, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
@@ -153,9 +155,10 @@ class Game {
 
     stop() {
         clearInterval(this.intervalId);
-        score = 0;
-        document.getElementById("score").innerText = score;
         document.getElementsByClassName("game-over-screen")[0].classList.toggle("display-none");
+        let audio = new Audio();
+        audio.src = "aaww.wav";
+        audio.play();
     }
   
     draw() {
@@ -204,6 +207,9 @@ class Game {
                 console.log("you got a coin! Good job!");
                 score += 1;
                 document.getElementById("score").innerText = score;
+                let audio = new Audio();
+                audio.src = "coin-sound.wav";
+                audio.play();
                 this.moveCoin();
             }
     }
