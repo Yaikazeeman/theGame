@@ -69,7 +69,7 @@ class Player {
         this.character.src = character;
         this.spritePositionX = spritePositionX;
         this.spritePositionY = spritePositionY;
-    }
+    } 
 }
 ////////////////////////////////////////////////////////////////////
 // game onload
@@ -79,17 +79,39 @@ window.onload = function() {
     
     document.getElementById("startbutton").onclick = function() {
         document.getElementsByClassName("startscreen")[0].classList.toggle("display-none");
-        var game = new Game(); 
-        window.addEventListener("keydown", game.keyDown.bind(game)); 
-        window.addEventListener("keyup", game.keyUp.bind(game));
+        document.getElementsByClassName("choose-character")[0].classList.toggle("display-none");
         }
 
     document.getElementById("restartstartbutton").onclick = function() {
         document.getElementsByClassName("game-over-screen")[0].classList.toggle("display-none");
-        var game = new Game(); 
+        document.getElementsByClassName("choose-character")[0].classList.toggle("display-none");
+        }
+    
+    document.getElementById("player1").onclick = function() {
+        var game = new Game(0); 
+        document.getElementsByClassName("choose-character")[0].classList.toggle("display-none");
         window.addEventListener("keydown", game.keyDown.bind(game)); 
         window.addEventListener("keyup", game.keyUp.bind(game));
-        }
+    }
+    document.getElementById("player2").onclick = function() { 
+        var game = new Game(96); 
+        document.getElementsByClassName("choose-character")[0].classList.toggle("display-none");
+        window.addEventListener("keydown", game.keyDown.bind(game)); 
+        window.addEventListener("keyup", game.keyUp.bind(game));
+    }
+    document.getElementById("player3").onclick = function() { 
+        var game = new Game(192); 
+        document.getElementsByClassName("choose-character")[0].classList.toggle("display-none");
+        window.addEventListener("keydown", game.keyDown.bind(game)); 
+        window.addEventListener("keyup", game.keyUp.bind(game));
+    }
+    document.getElementById("player4").onclick = function() { 
+        var game = new Game(288); 
+        document.getElementsByClassName("choose-character")[0].classList.toggle("display-none");
+        window.addEventListener("keydown", game.keyDown.bind(game)); 
+        window.addEventListener("keyup", game.keyUp.bind(game));
+    }
+
 
     document.getElementById("next-level").onclick = function() {
         chaserSpeed += 1;
@@ -109,12 +131,27 @@ window.onload = function() {
 // Game
 
 class Game {
-    constructor() {
-        this.player = new Player("player1", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 0, 0);
+    constructor(num) {
+        this.player = new Player("player1", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), num, 0);
         this.canvas = document.getElementById("canvas");
         this.ctx = canvas.getContext("2d");
         this.currentKey = undefined;
     }
+
+    // createPlayer() {
+    //     document.getElementById("player1").onclick = function() { 
+    //         this.player = new Player("player1", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 0, 0);
+    //     }
+    //     document.getElementById("player2").onclick = function() { 
+    //         this.player2 = new Player("player2", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 96, 0);
+    //     }
+    //     document.getElementById("player3").onclick = function() { 
+    //         this.player3 = new Player("player3", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 192, 0);
+    //     }
+    //     document.getElementById("player4").onclick = function() { 
+    //         this.player4 = new Player("player4", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 288, 0);
+    //     }
+    // }
 
     createCoin() {
         this.coin = new Coin (200, 100, 30, 30, "coin_2.png", this.createChaser.bind(this));
@@ -255,7 +292,6 @@ class Game {
         this.player.positionY = 0;
         }else{
          this.player.positionY -= 5;
-         this.player.spritePositionX = 0;
          this.player.spritePositionY = 96;
          }
         };
@@ -265,7 +301,6 @@ class Game {
             this.player.positionY = this.canvas.height - this.player.height;
         }else{
         this.player.positionY += 5;
-        this.player.spritePositionX = 0;
         this.player.spritePositionY = 0;
         } 
         };
@@ -275,7 +310,6 @@ class Game {
             this.player.positionX = 0;
         }else{
          this.player.positionX -= 5;
-         this.player.spritePositionX = 0;
          this.player.spritePositionY = 32;
         }
         };
@@ -285,7 +319,6 @@ class Game {
             this.player.positionX = this.canvas.width - this.player.width;
         }else{
         this.player.positionX += 5;
-        this.player.spritePositionX = 0;
         this.player.spritePositionY = 64;
         }
         };
