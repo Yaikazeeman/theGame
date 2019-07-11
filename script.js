@@ -1,6 +1,7 @@
 
 // General section
 let score = 0
+let chaserSpeed = 1;
 
 ///////////////////////////////////////////////////////////////
 // Coin intitiated
@@ -37,11 +38,12 @@ class Obstacle {
 ///////////////////////////////////////////////////////////////////
 // Green monster
 class Chaser {
-    constructor(positionX, positionY, width, height, img, callback, spritePositionX, spritePositionY) {
+    constructor(positionX, positionY, width, height, speed, img, callback, spritePositionX, spritePositionY) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.width = width;
         this.height = height;
+        this.speed = speed;
         this.img = new Image();
         this.img.onload = callback;
         this.img.src = img;
@@ -88,14 +90,16 @@ window.onload = function() {
         window.addEventListener("keyup", game.keyUp.bind(game));
         }
 
-    // function startGame(){
-    //     console.log(document)
-    //     document.getElementsByClassName("startscreen")[0].classList.toggle("display-none");
-    //     document.getElementsByClassName("game-over-screen")[0].classList.toggle("display-none");
-    //     var game = new Game(); 
-    //     window.addEventListener("keydown", game.keyDown.bind(game)); 
-    //     window.addEventListener("keyup", game.keyUp.bind(game));
-    // }   
+    document.getElementById("next-level").onclick = function() {
+        chaserSpeed += 1;
+        document.getElementById("level").innerText = Math.floor(chaserSpeed);
+        }
+    
+     document.getElementById("baby-level").onclick = function() {
+        chaserSpeed = 0.3;
+        document.getElementById("level").innerText = "Baby level";
+        }
+
 }
 
 
@@ -122,7 +126,7 @@ class Game {
     }
 
     createChaser(){
-        this.chaser = new Chaser(468, 368, 32, 32,"sprites-players.png", this.createObstacle.bind(this), 32, 128);
+        this.chaser = new Chaser(468, 368, 32, 32, chaserSpeed, "sprites-players.png", this.createObstacle.bind(this), 32, 128);
     }
 
     savedPosition(){
@@ -294,16 +298,16 @@ class Game {
 
     moveChaser() {
         if(this.player.positionX < this.chaser.positionX){
-            this.chaser.positionX -= 1;
+            this.chaser.positionX -= this.chaser.speed;
         }
         if(this.player.positionX > this.chaser.positionX){
-            this.chaser.positionX += 1;
+            this.chaser.positionX += this.chaser.speed;
         }
         if(this.player.positionY < this.chaser.positionY){
-            this.chaser.positionY -= 1;
+            this.chaser.positionY -= this.chaser.speed;
         }
         if(this.player.positionY > this.chaser.positionY){
-            this.chaser.positionY += 1;
+            this.chaser.positionY += this.chaser.speed;
         }
     }
 
