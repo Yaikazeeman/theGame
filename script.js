@@ -149,6 +149,8 @@ class Game {
 
     stop() {
         clearInterval(this.intervalId);
+        score = 0;
+        document.getElementById("score").innerText = score;
         document.getElementsByClassName("game-over-screen")[0].classList.toggle("display-none");
     }
   
