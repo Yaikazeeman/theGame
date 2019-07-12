@@ -126,9 +126,10 @@ window.onload = function() {
     document.getElementById("changeTheme").onclick = function() {
         document.getElementsByTagName("body")[0].classList.toggle("backgroundChange");
         document.getElementsByClassName("startscreen")[0].classList.toggle("backgroundChange2");
+        document.getElementsByClassName("game-over-screen")[0].classList.toggle("backgroundChange2");
+        document.getElementsByClassName("choose-character")[0].classList.toggle("backgroundChange2");
         document.getElementsByClassName("score")[0].classList.toggle("backgroundChange2");
         }
-
 }
 
 
@@ -144,6 +145,7 @@ class Game {
         this.currentKey = undefined;
     }
 
+//create functions
     createCoin() {
         this.coin = new Coin (200, 100, 30, 30, "coin_2.png", this.createChaser.bind(this));
     }
@@ -151,6 +153,17 @@ class Game {
     createObstacle() {
         this.obstacle = [
             new Obstacle (0, 50, 50, 50, "box.png", this.start.bind(this))]
+    }
+
+    createObstaclesRandom() {
+        for(let i = 1; i < 15; i++){
+            this.obstacle = this.obstacle.concat([new Obstacle (this.obstacle.positionX, this.obstacle.positionY, 50, 50, "box.png", undefined, this.obstacle[0].img)])
+            this.obstacle[i].positionX = (Math.floor((Math.random() * (this.canvas.width))/50))*50; 
+            this.obstacle[i].positionY = (Math.floor((Math.random() * (this.canvas.height))/50))*50; 
+            while(this.obstacle[i].positionX < 150 && this.obstacle[i].positionY < 50 || this.obstacle[i].positionX == 200 && this.obstacle[i].positionY == 100 ){
+                this.obstacle[i].positionX = (Math.floor((Math.random() * (this.canvas.width))/50))*50; 
+            }
+        }
     }
 
     createChaser(){
@@ -162,34 +175,12 @@ class Game {
         this.currentY = this.player.positionY;
     }
 
+// start/ stop function
     start() {
         score = 0;
         document.getElementById("score").innerText = score;
         this.createObstaclesRandom();
-        // this.obstacle = this.obstacle.concat([new Obstacle (50, 50, 50, 50,   "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (200, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (200, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (250, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (50, 350, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (50, 300, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (100, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (350, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (350, 100, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (400, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (300, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (250, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (50, 200, 50, 50,  "box.png", undefined, this.obstacle[0].img)])
         this.intervalId = setInterval(this.updateCanvas.bind(this), 20)
-    }
-
-    createObstaclesRandom() {
-        for(let i = 0; i < 10; i++){
-            this.obstacle[i].positionX = Math.floor(Math.random() * (this.canvas.width - this.obstacle.width)); 
-            this.obstacle[i].positionY = Math.floor(Math.random() * (this.canvas.height - this.obstacle.width)); 
-            console.log(Math.floor(Math.random() * (this.canvas.height - this.obstacle.width)));
-            this.obstacle = this.obstacle.concat([new Obstacle (this.obstacle[i].positionX, this.obstacle[i].positionY, 50, 50, "box.png", undefined, this.obstacle[0].img)])
-            
-        }
     }
 
     stop() {
@@ -199,7 +190,8 @@ class Game {
         audio.src = "aaww.wav";
         audio.play();
     }
-  
+
+//drawing/clearing functions
     draw() {
         this.ctx.drawImage(this.coin.img, this.coin.positionX, this.coin.positionY, 30, 30);
         this.ctx.drawImage(this.player.character, this.player.spritePositionX, this.player.spritePositionY, 32, 32, this.player.positionX, this.player.positionY, 32, 32);
@@ -210,15 +202,7 @@ class Game {
         }
 
         this.ctx.drawImage(this.chaser.img, this.chaser.spritePositionX, this.chaser.spritePositionY, 32, 32, this.chaser.positionX, this.chaser.positionY, 32, 32);
-
-        
     }
-
-    collisionDetection() {
-        this.checkForCollisionCoin();
-        this.checkForCollisionObstacle();
-        this.checkForCollisionChaser();
-    };
 
     updateCanvas() {
         this.clearCanvas();
@@ -237,6 +221,13 @@ class Game {
     clearCanvas(){
         this.ctx.clearRect(0,0,500,400);
     }
+
+//check collision functions
+    collisionDetection() {
+        this.checkForCollisionCoin();
+        this.checkForCollisionObstacle();
+        this.checkForCollisionChaser();
+    };
 
     checkForCollisionCoin() {
         if (this.player.positionX < this.coin.positionX + this.coin.width &&
@@ -276,6 +267,7 @@ class Game {
             }
     }
 
+//moving functions
     moveCoin(){
         this.coin.positionX = Math.floor(Math.random() * (this.canvas.width - this.coin.width)); 
         this.coin.positionY = Math.floor(Math.random() * (this.canvas.height - this.coin.width)); 
@@ -353,6 +345,20 @@ class Game {
     }
 
 }
+
+        // this.obstacle = this.obstacle.concat([new Obstacle (50, 50, 50, 50,   "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (200, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (200, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (250, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (50, 350, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (50, 300, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (100, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (350, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (350, 100, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (400, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (300, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (250, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (50, 200, 50, 50,  "box.png", undefined, this.obstacle[0].img)])
 
 
    
