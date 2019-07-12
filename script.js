@@ -123,6 +123,12 @@ window.onload = function() {
         document.getElementById("level").innerText = "Baby level";
         }
 
+    document.getElementById("changeTheme").onclick = function() {
+        document.getElementsByTagName("body")[0].classList.toggle("backgroundChange");
+        document.getElementsByClassName("startscreen")[0].classList.toggle("backgroundChange2");
+        document.getElementsByClassName("score")[0].classList.toggle("backgroundChange2");
+        }
+
 }
 
 
@@ -137,21 +143,6 @@ class Game {
         this.ctx = canvas.getContext("2d");
         this.currentKey = undefined;
     }
-
-    // createPlayer() {
-    //     document.getElementById("player1").onclick = function() { 
-    //         this.player = new Player("player1", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 0, 0);
-    //     }
-    //     document.getElementById("player2").onclick = function() { 
-    //         this.player2 = new Player("player2", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 96, 0);
-    //     }
-    //     document.getElementById("player3").onclick = function() { 
-    //         this.player3 = new Player("player3", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 192, 0);
-    //     }
-    //     document.getElementById("player4").onclick = function() { 
-    //         this.player4 = new Player("player4", 0, 0, 30, 30,"sprites-players.png", this.createCoin.bind(this), 288, 0);
-    //     }
-    // }
 
     createCoin() {
         this.coin = new Coin (200, 100, 30, 30, "coin_2.png", this.createChaser.bind(this));
@@ -174,20 +165,31 @@ class Game {
     start() {
         score = 0;
         document.getElementById("score").innerText = score;
-        this.obstacle = this.obstacle.concat([new Obstacle (50, 50, 50, 50,   "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (200, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (200, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (250, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (50, 350, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (50, 300, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (100, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (350, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (350, 100, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (400, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (300, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (250, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        new Obstacle (50, 200, 50, 50,  "box.png", undefined, this.obstacle[0].img)])
+        this.createObstaclesRandom();
+        // this.obstacle = this.obstacle.concat([new Obstacle (50, 50, 50, 50,   "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (200, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (200, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (250, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (50, 350, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (50, 300, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (100, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (350, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (350, 100, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (400, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (300, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (250, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
+        // new Obstacle (50, 200, 50, 50,  "box.png", undefined, this.obstacle[0].img)])
         this.intervalId = setInterval(this.updateCanvas.bind(this), 20)
+    }
+
+    createObstaclesRandom() {
+        for(let i = 0; i < 10; i++){
+            this.obstacle[i].positionX = Math.floor(Math.random() * (this.canvas.width - this.obstacle.width)); 
+            this.obstacle[i].positionY = Math.floor(Math.random() * (this.canvas.height - this.obstacle.width)); 
+            console.log(Math.floor(Math.random() * (this.canvas.height - this.obstacle.width)));
+            this.obstacle = this.obstacle.concat([new Obstacle (this.obstacle[i].positionX, this.obstacle[i].positionY, 50, 50, "box.png", undefined, this.obstacle[0].img)])
+            
+        }
     }
 
     stop() {
