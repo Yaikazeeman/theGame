@@ -2,6 +2,7 @@
 // General section
 let score = 0
 let chaserSpeed = 1;
+let highscore = 0;
 
 ///////////////////////////////////////////////////////////////
 // Coin intitiated
@@ -189,6 +190,8 @@ class Game {
         let audio = new Audio();
         audio.src = "aaww.wav";
         audio.play();
+        if(highscore < score){highscore = score};
+        document.getElementById("highscore").innerText = highscore;
     }
 
 //drawing/clearing functions
