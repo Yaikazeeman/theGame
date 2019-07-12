@@ -110,6 +110,11 @@ body{
     justify-content: center;
 }
 
+.choose-character img {
+    margin: 20px auto;
+    width: 350px;
+}
+
 .choose-character div img {
     margin: 15px;
     width: 30px;
