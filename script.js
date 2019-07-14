@@ -18,6 +18,16 @@ class Coin {
     }
 }
 
+class CoinRain {
+    constructor(positionX, positionY, width, height, img) {
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.width = width;
+        this.height = height;
+        this.img = img;
+    }
+}
+
 
 /////////////////////////////////////////////////////////////////
 // Obstacle 
@@ -144,11 +154,16 @@ class Game {
         this.canvas = document.getElementById("canvas");
         this.ctx = canvas.getContext("2d");
         this.currentKey = undefined;
+        this.coinRainRunning = false;
     }
 
 //create functions
     createCoin() {
         this.coin = new Coin (200, 100, 30, 30, "coin_2.png", this.createChaser.bind(this));
+    }
+
+    createCoinRain() {
+        this.coinRainArr = []
     }
 
     createObstacle() {
@@ -181,7 +196,9 @@ class Game {
         score = 0;
         document.getElementById("score").innerText = score;
         this.createObstaclesRandom();
+        this.createCoinRain();
         this.intervalId = setInterval(this.updateCanvas.bind(this), 20)
+
     }
 
     stop() {
@@ -199,12 +216,18 @@ class Game {
         this.ctx.drawImage(this.coin.img, this.coin.positionX, this.coin.positionY, 30, 30);
         this.ctx.drawImage(this.player.character, this.player.spritePositionX, this.player.spritePositionY, 32, 32, this.player.positionX, this.player.positionY, 32, 32);
 
-        let i = 0;
-        for(i = 0; i < this.obstacle.length; i++){
+        if(score >= 10 && score <= 25){
+            for(let i = 0; i < this.coinRainArr.length; i++) {
+                this.ctx.drawImage(this.coinRainArr[i].img, this.coinRainArr[i].positionX, this.coinRainArr[i].positionY, 30, 30);
+            }
+        }
+
+        for(let i = 0; i < this.obstacle.length; i++){
             this.ctx.drawImage(this.obstacle[i].img, this.obstacle[i].positionX, this.obstacle[i].positionY, 50, 50);
         }
 
         this.ctx.drawImage(this.chaser.img, this.chaser.spritePositionX, this.chaser.spritePositionY, 32, 32, this.chaser.positionX, this.chaser.positionY, 32, 32);
+        
     }
 
     updateCanvas() {
@@ -230,6 +253,8 @@ class Game {
         this.checkForCollisionCoin();
         this.checkForCollisionObstacle();
         this.checkForCollisionChaser();
+        this.coinRainCheck();
+        this.checkForCollisionCoinRain();
     };
 
     checkForCollisionCoin() {
@@ -347,26 +372,42 @@ class Game {
         }
     }
 
+//Coin rain functions
+
+    coinRainCheck() {
+        if(score > 9 && !this.coinRainRunning){
+            this.createCoinRain();
+            this.coinRain()
+            this.coinRainRunning = true;
+        }
+    }
+
+
+    coinRain() {
+        for(let i = 0; i < 10; i++){
+            let positionX = (Math.floor((Math.random() * (this.canvas.width)))); 
+            let positionY = (Math.floor((Math.random() * (this.canvas.height)))); 
+            this.coinRainArr = this.coinRainArr.concat([new CoinRain (positionX, positionY, 30, 30, this.coin.img)]);
+            console.log("hi");
+        }
+    }
+
+    checkForCollisionCoinRain(){
+        for(let i = 0; i < this.coinRainArr.length; i++){
+            if (this.player.positionX < this.coinRainArr[i].positionX + this.coinRainArr[i].width &&
+                this.player.positionX + this.player.width > this.coinRainArr[i].positionX &&
+                this.player.positionY < this.coinRainArr[i].positionY + this.coinRainArr[i].height && 
+                this.player.positionY + this.player.height > this.coinRainArr[i].positionY){
+                    console.log("you got a coin! Good job!");
+                    score += 1;
+                    this.coinRainArr.splice(i, 1);
+                    document.getElementById("score").innerText = score;
+                    let audio = new Audio();
+                    audio.src = "coin-sound.wav";
+                    audio.play();
+            }
+        }
+ 
+    }
 }
-
-        // this.obstacle = this.obstacle.concat([new Obstacle (50, 50, 50, 50,   "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (200, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (200, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (250, 350, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (50, 350, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (50, 300, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (100, 300, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (350, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (350, 100, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (400, 50, 50, 50,  "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (300, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (250, 200, 50, 50, "box.png", undefined, this.obstacle[0].img),
-        // new Obstacle (50, 200, 50, 50,  "box.png", undefined, this.obstacle[0].img)])
-
-
-   
-
-
-
-
 
